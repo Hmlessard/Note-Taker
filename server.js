@@ -15,3 +15,34 @@ app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
 app.use(express.static('./public/'));
 
+//Homepage
+app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname, "./public/notes.html"));
+});
+
+//API path for notes page, returns entries in the json file
+app.get("/api/notes", function(req, res) {
+    console.log(notes);
+    return res.json(notes);
+});
+
+//Default route
+app.get("*", function(req, res){
+    res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+
+ //Create new notes and save to db.json
+ app.post("./api/notes", function(req, res) {
+     var newNote = req.body;
+     newNote.id = uniqueId();
+     notes.push(newNote);
+     fs.writeFileSync("./db/db.json", JSON.stringify(notes));
+     res.json(notes);
+ });
+
+ //Server Start
+ app.listen(PORT,function(){
+     console.log("application listening" + PORT);
+ });
+ //Delete notes
+ 
